@@ -3,6 +3,7 @@
 import webapp2
 import jinja2
 import json
+import logging
 import os
 import re
 import urllib
@@ -67,14 +68,14 @@ keywords = [
     "pizza"
 ]
 
-regexes = []
-
 def compileRegex():
     # compile all the keywords as regex
+    regexes = []
     for keyword in keywords:
         regexes.append(re.compile(keyword, re.IGNORECASE))
+    return regexes
 
-def parseNote(note):
+def parseNote(note, regexes):
     item = ""
     for index, regex in enumerate(regexes):
         if regex.match(note):
@@ -85,7 +86,7 @@ def parseNote(note):
     return item
 
 def classifyPayment(data):
-    compileRegex()
+    regexes = compileRegex()
 
     items = []
 
@@ -96,12 +97,15 @@ def classifyPayment(data):
             date = payment["date_created"]
             note = payment["note"]
 
-            item = parseNote(note)
+            item = parseNote(note, regexes)
+            logging.debug('index, item: ' + str(index) + ' ' + str(item))
 
             # send to db if regex matched value
             if item:
                 items.append({'title': item, 'amount': amount, 'date': date, 'note': note})
+            logging.debug(str(len(items)))
 
+    logging.debug('FINAL ' + str(len(items)))
     return items
 
 
@@ -112,20 +116,27 @@ class OAuthSuccessHandler(BaseHandler):
         access_token = self.request.get('access_token')
 
         # make payments API call with access_token
-        url = 'https://api.venmo.com/v1/payments?limit=1000&access_token=' + access_token
-        response = urlfetch.fetch(url)
+        url = 'https://api.venmo.com/v1/payments?limit=500&access_token=' + access_token
+        response = urlfetch.fetch(url, deadline=30)
+
+        logging.debug('response.status_code ' + str(response.status_code) + '////')
+
+        logging.debug(response.content + '////')
 
 
         # parse json, create db entries
         if response.status_code == 200:
-            items = classifyPayment(json.loads(response.content))
-        self.write(items)
+            response_json = json.loads(response.content)
+            logging.debug('bool(response_json): ' + str(bool(response_json)))
+            items = classifyPayment(response_json)
+        self.write(str(items) + ' //// ')
 
         for item in items:
             item_entry = Item(date=dateutil.parser.parse(item['date']), title=item['title'],
                 amount=item['amount'], note=item['note'])
-            self.write(item_entry)
+            # self.write(str(item_entry))
             item_entry.put()
+            self.write(item['title'] + ' was put in db, ')
 
 
 class StatsHandler(BaseHandler):
