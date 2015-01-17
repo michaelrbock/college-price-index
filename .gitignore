@@ -53,4 +53,6 @@ docs/_build/
 # PyBuilder
 target/
 
+# Custom
 *.DS_Store
+secrets.txt
