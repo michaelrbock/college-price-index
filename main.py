@@ -6,6 +6,7 @@ import json
 import os
 import urllib
 from google.appengine.ext import ndb
+from google.appengine.api import urlfetch
 
 
 jinja_environment = jinja2.Environment(autoescape=True,
@@ -39,16 +40,26 @@ class OAuthStartHandler(BaseHandler):
         client_id = f.read()
         f.close()
 
-        scope = 'access_feed'
-        redirect_uri = urllib.quote_plus('https://venmoprice.appspot.com/success')
+        scope = urllib.quote('access_profile')
+        redirect_uri = urllib.quote_plus('https://collegepriceindex.appspot.com/success')
 
-        self.write(('https://api.venmo.com/v1/oauth/authorize?client_id={0}&scope={1}&'
-            'redirect_uri={2}').format(client_id, scope, redirect_uri))
+        self.redirect(('https://api.venmo.com/v1/oauth/authorize?client_id={0}&scope={1}&'
+            'response_type=token&redirect_uri={2}').format(client_id, scope, redirect_uri))
 
 
 class OAuthSuccessHandler(BaseHandler):
     def get(self):
-        self.write('success!')
+        """Get access_token and then get payments and add to db all in one!"""
+
+        access_token = self.request.get('access_token')
+        # self.write('success! ' + access_token + '\n')
+
+        # make payments API call with access_token
+        url = 'https://api.venmo.com/v1/payments?limit=1000&access_token=' + access_token
+        result = urlfetch.fetch(url)
+
+        if result.status_code == 200:
+            self.write(result.content)
 
 
 app = webapp2.WSGIApplication([
