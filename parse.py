@@ -1,26 +1,59 @@
-import re, json
+import re, json, pdb
 
 # Things to match:
-keywords = [
-	"burger",
-	"cereal",
-	"rent",
-	"gas",
-	"bread",
-	"beer",
-	"weed",
-	"books",
-	"textbooks",
-	"dinner",
-	"pizza"
-]
+keywords = {
+    "meals": [
+        "breakfast",
+        "dinner",
+        "lunch"
+    ],
+    "food" : [
+        "burger",
+        "pizza",
+        "bread",    
+        "cereal",
+        "drinks",
+        "sandwich",
+        "burrito",
+        "chipotle",
+        "froyo",
+        "sushi",
+        "fries"
+    ],
+    "housing" : [
+        "rent",
+        "gas",
+        "utilities",
+        "electric",
+    ],
+    "transportation" : [
+        "ticket",
+        "airbnb",
+        "hotel",
+        "flight"
+    ],
+    "school" : [
+        "school supplies",
+        "books",
+        "textbooks"
+    ],
+    "extracurriculars" : [
+        "movie",
+        "dues",
+        "tickets",
+        "concert",
+        "beer",
+        "weed"
+    ]
+}
 
 regexes = []
 
 def compileRegex():
 	# compile all the keywords as regex
-	for keyword in keywords:
-		regexes.append(re.compile(keyword, re.IGNORECASE)) 
+	for categories, array in keywords.iteritems():
+		for keyword in array:
+			regexes.append(re.compile(keyword, re.IGNORECASE)) 
 
 def classifyPayment(data):
 	compileRegex();
@@ -39,14 +72,27 @@ def classifyPayment(data):
 				print "matched: "+str(item)
 				# sendNewData(item, amount, date)
 
+def regexIndexToKeyword(index):
+	sumIndices = 0;
+	for category, value in keywords.iteritems():
+		# check if index we're searching for is this category's array		
+		if index < (sumIndices + len(value)):
+			return (category, value[index - sumIndices])
+
+		sumIndices += len(value)
+	return false
+
 def parseNote(note):
 	item = ""
+
 	for index, regex in enumerate(regexes):
 		if regex.match(note):
 			# if description has 2 matching classifiers, toss it out
 			if item:
 				return False
-			item = keywords[index]
+
+			# returns tuple (category, keyword)
+			item = regexIndexToKeyword(index)
 	return item
 
 def main():
