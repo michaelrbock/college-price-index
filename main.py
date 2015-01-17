@@ -156,8 +156,7 @@ keywords = {
     ],
     "school" : [
         "school supplies",
-        "book",
-        "textbook"
+        "book"
     ],
     "recreational" : [
         "movie",
@@ -202,11 +201,15 @@ def regexIndexToKeyword(index):
 
         sumIndices += len(value)
 
+def is_ascii(s):
+    return all(ord(c) < 128 for c in s)
+
+
 def parseNote(note, regexes):
     item = None
 
     for index, regex in enumerate(regexes):
-        if regex.match(note):
+        if re.search(regex, note):
             # if description has 2 matching classifiers, toss it out
             if item:
                 logging.debug('if item is true, item= ' + str(item))
@@ -214,6 +217,9 @@ def parseNote(note, regexes):
 
             # returns tuple (category, keyword)
             item = regexIndexToKeyword(index)
+
+            if is_ascii(item[1]):
+                logging.debug('item = ' + item[1])
     return item
 
 def classifyPayment(data):
@@ -239,7 +245,6 @@ def classifyPayment(data):
             if item:
                 items.append({'title': item, 'amount': amount, 'date': date, 'note': note,
                     'category': category, 'id': _id})
-            logging.debug(str(len(items)))
 
     logging.debug('FINAL ' + str(len(items)))
     return items
@@ -263,7 +268,6 @@ class OAuthSuccessHandler(BaseHandler):
         # parse json, create db entries
         if response.status_code == 200:
             response_json = json.loads(response.content)
-            logging.debug('bool(response_json): ' + str(bool(response_json)))
             items = classifyPayment(response_json)
 
         categories = defaultdict(list)
