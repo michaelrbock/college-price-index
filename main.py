@@ -107,6 +107,7 @@ keywords = {
         "jimmy johns",
         "subway",
         "starbucks",
+        "taco bell",
         "noodles",
         "quiznos",
         "juice",
@@ -118,6 +119,9 @@ keywords = {
         "milk",
         "eggs",
         "bacon",
+        "coffee",
+        "tea",
+        "vending",
         hamburger,
         pizza    ,
         chicken  ,
@@ -171,6 +175,8 @@ keywords = {
     "vices" : [
         "beer",
         "weed",
+        "bet",
+        "gambl",
         cig   ,
         drugs ,
         drink ,
@@ -273,8 +279,9 @@ class OAuthSuccessHandler(BaseHandler):
         categories = defaultdict(list)
 
         for item in items:
-            categories[item['category']].append(item['amount'])
-            item_entry = Item(date=dateutil.parser.parse(item['date']), title=item['title'],
+            parsed_date = dateutil.parser.parse(item['date'])
+            categories[item['category']].append({'amount': item['amount'], 'date': parsed_date})
+            item_entry = Item(date=parsed_date, title=item['title'],
                 amount=item['amount'], note=item['note'], category=item['category'], id=item['id'])
             item_entry.put()
 
@@ -282,11 +289,85 @@ class OAuthSuccessHandler(BaseHandler):
             # query db to get the category, update info
             category_entry = ndb.Key(Category, key).get()
             if not category_entry:
-                category_entry = Category(id=key, total=sum(categories[key]),
-                    count=len(categories[key]))
-            else:
-                category_entry.total += sum(categories[key])
-                category_entry.count += len(categories[key])
+                history = [
+                    {
+                        'start_date': '01/01/2012',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '04/01/2012',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '07/01/2012',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '10/01/2012',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '01/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '04/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '07/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '10/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '01/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '04/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '07/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '10/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                        'start_date': '01/01/2015',
+                        'total': 0,
+                        'count': 0
+                    }
+                ]
+                category_entry = Category(id=key, total=0, count=0, history=history)
+
+            category_entry.total += sum(item['amount'] for item in categories[key])
+            category_entry.count += len(categories[key])
+
+            for item in categories[key]:
+                # calculate quarter
+                if item['date'].month < 4:
+                    quarter = '01/01/'
+                elif item['date'].month < 7:
+                    quarter = '04/01/'
+                elif item['date'].month < 10:
+                    quarter = '07/01/'
+                else:
+                    quarter = '10/01/'
+
+                if item['date'].year >= 2012:
+                    quarter += str(item['date'].year)
+                    # add to history
+                    quarter_num = [x for x in history if x['start_date'] == quarter][0]
+                    category_entry.history[quarter_num]['total'] += item['amount']
+                    category_entry.history[quarter_num]['count'] += 1
+
+
             category_entry.put()
 
         self.write('Thanks for adding {0} items in {1} categories the College Price Index! '.format(
@@ -312,6 +393,13 @@ class Category(ndb.Model):
     date_created = ndb.DateTimeProperty(auto_now_add=True)
     total = ndb.FloatProperty()
     count = ndb.IntegerProperty()
+    history = ndb.JsonProperty()
+
+
+# class ItemQuarters(ndb.Model):
+#     category = ndb.StringProperty(required=True)
+#     total =
+#     count =
 
 
 class User(ndb.Model):
