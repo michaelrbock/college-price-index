@@ -54,35 +54,81 @@ class OAuthStartHandler(BaseHandler):
 
 
 # Things to match:
-keywords = [
-    "burger",
-    "cereal",
-    "rent",
-    "gas",
-    "bread",
-    "beer",
-    "weed",
-    "books",
-    "textbooks",
-    "dinner",
-    "pizza"
-]
+keywords = {
+    "meals": [
+        "breakfast",
+        "dinner",
+        "lunch"
+    ],
+    "food" : [
+        "burger",
+        "pizza",
+        "bread",
+        "cereal",
+        "drinks",
+        "sandwich",
+        "burrito",
+        "chipotle",
+        "froyo",
+        "sushi",
+        "fries"
+    ],
+    "housing" : [
+        "rent",
+        "gas",
+        "utilities",
+        "electric",
+    ],
+    "transportation" : [
+        "ticket",
+        "airbnb",
+        "hotel",
+        "flight"
+    ],
+    "school" : [
+        "school supplies",
+        "books",
+        "textbooks"
+    ],
+    "extracurriculars" : [
+        "movie",
+        "dues",
+        "tickets",
+        "concert",
+        "beer",
+        "weed"
+    ]
+}
 
 def compileRegex():
     # compile all the keywords as regex
     regexes = []
-    for keyword in keywords:
-        regexes.append(re.compile(keyword, re.IGNORECASE))
+    for categories, array in keywords.iteritems():
+        for keyword in array:
+            regexes.append(re.compile(keyword, re.IGNORECASE))
     return regexes
+
+def regexIndexToKeyword(index):
+    sumIndices = 0;
+    for category, value in keywords.iteritems():
+        # check if index we're searching for is this category's array
+        if index < (sumIndices + len(value)):
+            return (category, value[index - sumIndices])
+
+        sumIndices += len(value)
+    return false
 
 def parseNote(note, regexes):
     item = ""
+
     for index, regex in enumerate(regexes):
         if regex.match(note):
             # if description has 2 matching classifiers, toss it out
             if item:
                 return False
-            item = keywords[index]
+
+            # returns tuple (category, keyword)
+            item = regexIndexToKeyword(index)
     return item
 
 def classifyPayment(data):
@@ -96,13 +142,20 @@ def classifyPayment(data):
             amount = payment["amount"]
             date = payment["date_created"]
             note = payment["note"]
+            _id = payment["id"]
 
-            item = parseNote(note, regexes)
+            parse_note_tuple = parseNote(note, regexes)
+            if parse_note_tuple:
+                category, item = parseNote(note, regexes)
+            else:
+                continue
+
             logging.debug('index, item: ' + str(index) + ' ' + str(item))
 
             # send to db if regex matched value
             if item:
-                items.append({'title': item, 'amount': amount, 'date': date, 'note': note})
+                items.append({'title': item, 'amount': amount, 'date': date, 'note': note,
+                    'category': category, 'id': _id})
             logging.debug(str(len(items)))
 
     logging.debug('FINAL ' + str(len(items)))
@@ -129,14 +182,14 @@ class OAuthSuccessHandler(BaseHandler):
             response_json = json.loads(response.content)
             logging.debug('bool(response_json): ' + str(bool(response_json)))
             items = classifyPayment(response_json)
-        self.write(str(items) + ' //// ')
 
         for item in items:
             item_entry = Item(date=dateutil.parser.parse(item['date']), title=item['title'],
-                amount=item['amount'], note=item['note'])
-            # self.write(str(item_entry))
+                amount=item['amount'], note=item['note'], category=item['category'], id=item['id'])
             item_entry.put()
-            self.write(item['title'] + ' was put in db, ')
+
+        self.write('Thanks for adding {0} items to the College Price Index! '.format(str(len(items))))
+        self.write('We appreciate your contribution to science!')
 
 
 class StatsHandler(BaseHandler):
@@ -149,6 +202,7 @@ class Item(ndb.Model):
     title = ndb.StringProperty(required=True)
     amount = ndb.FloatProperty(required=True)
     note = ndb.TextProperty(required=True)
+    category = ndb.StringProperty()
 
 
 class Category(ndb.Model):
