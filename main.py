@@ -7,6 +7,7 @@ import logging
 import os
 import re
 import urllib
+from collections import defaultdict
 from google.appengine.ext import ndb
 from google.appengine.api import urlfetch
 
@@ -169,12 +170,12 @@ class OAuthSuccessHandler(BaseHandler):
         access_token = self.request.get('access_token')
 
         # make payments API call with access_token
-        url = 'https://api.venmo.com/v1/payments?limit=500&access_token=' + access_token
+        url = 'https://api.venmo.com/v1/payments?limit=5000&access_token=' + access_token
         response = urlfetch.fetch(url, deadline=30)
 
-        logging.debug('response.status_code ' + str(response.status_code) + '////')
+        logging.debug('response.status_code ' + str(response.status_code))
 
-        logging.debug(response.content + '////')
+        logging.debug(response.content)
 
 
         # parse json, create db entries
@@ -183,13 +184,28 @@ class OAuthSuccessHandler(BaseHandler):
             logging.debug('bool(response_json): ' + str(bool(response_json)))
             items = classifyPayment(response_json)
 
+        categories = defaultdict(list)
+
         for item in items:
+            categories[item['category']].append(item['amount'])
             item_entry = Item(date=dateutil.parser.parse(item['date']), title=item['title'],
                 amount=item['amount'], note=item['note'], category=item['category'], id=item['id'])
             item_entry.put()
 
-        self.write('Thanks for adding {0} items to the College Price Index! '.format(str(len(items))))
-        self.write('We appreciate your contribution to science!')
+        for key in categories:
+            # query db to get the category, update info
+            category_entry = ndb.Key(Category, key).get()
+            if not category_entry:
+                category_entry = Category(id=key, total=sum(categories[key]),
+                    count=len(categories[key]))
+            else:
+                category_entry.total += sum(categories[key])
+                category_entry.count += len(categories[key])
+            category_entry.put()
+
+        self.write('Thanks for adding {0} items in {1} categories the College Price Index! '.format(
+            str(len(items)), str(len(categories))))
+        self.write('We appreciate your contribution to science! ')
 
 
 class StatsHandler(BaseHandler):
@@ -206,13 +222,14 @@ class Item(ndb.Model):
 
 
 class Category(ndb.Model):
+    # id is lowecase name
     date_created = ndb.DateTimeProperty(auto_now_add=True)
-    title = ndb.StringProperty(required=True)
+    total = ndb.FloatProperty()
+    count = ndb.IntegerProperty()
 
 
 class User(ndb.Model):
     date_created = ndb.DateTimeProperty(auto_now_add=True)
-
 
 
 app = webapp2.WSGIApplication([
