@@ -1,93 +1,73 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>College Price Index</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-
-    <link type="text/css" rel="stylesheet" href="/static/css/main.css"/>
-
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-
-
+    {% include 'header.html' %}
 </head>
-
 <body>
 
-    <nav class="navbar navbar-default">
-        <div class="container">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="#">
-                <img alt="Brand" src="http://placehold.it/50x50">
-              </a>
-                <p class="navbar-brand">
-                    <a href="#">
-                        College Price Index
-                    </a>
-                </p>
+    <div class="container">
+        <div id="customNavBar" class="row">
+            <div id="logo" class="col-sm-3 col-xs-3">
+                <img src="http://placehold.it/700x700" class="img-responsive">
+            </div>
+            <div id="title" class="col-sm-6 col-xs-6">
+                COLLEGE<br>PRICE<br>INDEX
+            </div>
+            <div id="customButton" class="col-sm-3 col-xs-3">
+                <a href="/signup" class="btn btn-default">Sign Up</a>
             </div>
         </div>
-    </nav>
+    </div>
+
+        <div class="row">
+            <div id="mainImage" class="col-sm-12 col-xs-12 chartGrid">
+
+
+            </div>
+
+    </div>
+
+<!--
+var colors = {'food':'#fff', 'transportation':'#fff', 'school':'#fff', 'recreation':'#fff', 'vices':'#fff',
+'housing':'#fff'} -->
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-12 col-xs-12 chartGrid">
-                <img src="http://placehold.it/900x500" class="img-responsive">
-            </div>
-        </div>
-        <div class="row">
             <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Sample Data</h4>
                 <div id="maxwidth" >
                   <svg class="chart" id="chart" >
                   </svg>
                 </div>
+
+
+                 <div id="text-results"></div>
+    <script type="text/handlebars" id="text-template">
+      <div class="row marketing">
+        <h4>({{'{{area_code}}'}}) {{'{{body}}'}}</h4>
+        <div class="col-md-3">{{'{{city}}'}}, {{'{{state}}'}}</div>
+        <div class="col-md-2">{{'{{zip_code}}'}}</div>
+        <div class="col-md-3">{{'{{time_since}}'}} ago</div>
+      </div>
+      <hr>
+    </script>
             </div>
             <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Sample Data</h4>
                 <img src="http://placehold.it/500x500" class="img-responsive">
             </div>
             <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Sample Data</h4>
                 <img src="http://placehold.it/500x500" class="img-responsive">
             </div>
         </div>
     </div>
 
 
-    <script >
-
-        var data = [4, 8, 15, 16, 23, 42];
-
-        var width = $("#maxwidth").width(),
-            barHeight = 20;
-
-        var x = d3.scale.linear()
-            .domain([0, d3.max(data)])
-            .range([0, width]);
-
-        var chart = d3.select(".chart")
-            .attr("width", width)
-            .attr("height", barHeight * data.length);
-
-        var bar = chart.selectAll("g")
-            .data(data)
-          .enter().append("g")
-            .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; });
-
-        bar.append("rect")
-            .attr("width", x)
-            .attr("height", barHeight - 1);
-
-        bar.append("text")
-            .attr("x", function(d) { return x(d) - 3; })
-            .attr("y", barHeight / 2)
-            .attr("dy", ".35em")
-            .text(function(d) { return d; });
-
-        </script>
+    <script src="/static/js/main.js">
+    </script>
 
 </body>
 

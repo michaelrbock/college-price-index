@@ -12,3 +12,24 @@
   font: 10px sans-serif;
   text-anchor: end;
 }
+#logo{
+	margin: 10px 0 40px 0;
+}
+#title{
+	margin: 10px 0 40px 0;
+	font-size: 25pt;
+}
+#customButton{
+	margin: 10px 0 40px 0;
+	text-align: right;
+}
+
+#mainImage {
+	margin: 0px;
+	padding-right: 0px;
+}
+
+
+body{
+	margin-left: 0px;
+}
