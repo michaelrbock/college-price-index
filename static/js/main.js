@@ -3,8 +3,10 @@ var colors = {'food':'#c16e33', 'transportation':'#3b489a', 'school':'#5b816c', 
 'housing':'#55302c'}
 
 
+var colorsMain = ['#c16e33','#86963b', '#55302c', '#5b816c', '#694b81','#3b489a']
+
 var maingraphdata = null;
-d3.json("https://collegepriceindex.appspot.com/api/categories", function(error, json) {
+d3.json("/static/src/data2.json", function(error, json) {
 
 
   maingraphdata = json.data
@@ -58,7 +60,7 @@ var n = highcatagories.length, // number of layers
       console.log("d" ,d);
 
 
-      result = colors[highcatagories[stupidcounter]];
+      result = colorsMain[stupidcounter];
       stupidcounter += 1;
       return result
     });

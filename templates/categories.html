@@ -61,24 +61,53 @@
 
 
     <script>
-
-    var highcatagories = {{ items | safe }}
-`var colors = {'food':'#c16e33', 'transportation':'#3b489a', 'school':'#5b816c', 'recreational':'#694b81', 'vices':'#86963b',
-'housing':'#55302c'}
-
+    var highcatagories = {{items | safe}}
+    var colors = {'food':'#c16e33', 'transportation':'#3b489a', 'school':'#5b816c', 'recreational':'#694b81', 'vices':'#86963b',
+    'housing':'#55302c'}
 
 
+var maingraphdata = null;
+d3.json("https://collegepriceindex.appspot.com/api/categories/{{ category_id}}/items", function(error, json) {
 
 
-
-highcatagories.forEach(function(catagory){
-
-    var catagoryid = "#" + catagory + "Chart";
-    // console.log(catagoryid)
+  var maingraphdata = json.data;
 
 
 
-    var format = d3.time.format("%m/%d/%Y");
+   highcatagories.forEach(function(catagory) {
+      itemChartsRender(catagory, maingraphdata);
+  });
+
+
+});
+
+
+   // d3.json("/static/src/data.json", function(error, json) {
+   //        // if (error) return console.warn(error);
+   //        // console.log(json)
+
+
+
+
+var itemChartsRender = function(catagory, data){
+
+
+  var catagoryid = "#" + catagory + "Chart";
+   var format = d3.time.format("%m/%d/%Y");
+
+
+
+    data.forEach(function(d){
+
+          d.date = format.parse(d.start_date);
+          d.value = +d.average;
+
+
+      })
+
+
+
+
 
     var margin = {top: 20, right: 30, bottom: 30, left: 40},
         width = $(catagoryid).width() - margin.left - margin.right,
@@ -96,7 +125,7 @@ highcatagories.forEach(function(catagory){
     var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(d3.time.months, 6);
+        .ticks(d3.time.months, 12);
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -126,63 +155,29 @@ highcatagories.forEach(function(catagory){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
+    var layers = stack(nest.entries(data));
 
-    d3.json("/static/src/data.json", function(error, json) {
-          // if (error) return console.warn(error);
-          // console.log(json)
-        var catindex = 0
-        var index = 0;
-        json.data.forEach(function(d){
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
 
+    svg.selectAll(".layer")
+        .data(layers)
+      .enter().append("path")
+        .attr("class", "layer")
+        .attr("d", function(d) { return area(d.values); })
+        .style("fill", colors[catagory]);
 
-            if (d.title == catagory) {
-                catindex = index
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
-            }
-            index = index +1;
+    svg.append("g")
+        .attr("class", "y axis")
+         .attr("transform", "translate(0,0)")
+        .call(yAxis);
+  };
 
-          });
-
-          data = json.data[catindex].history
-
-          data.forEach(function(d){
-
-                d.date = format.parse(d.start_date);
-
-                d.value = +d.average;
-
-
-
-
-            })
-
-
-
-
-
-          var layers = stack(nest.entries(data));
-
-          x.domain(d3.extent(data, function(d) { return d.date; }));
-          y.domain([0, d3.max(data, function(d) { return d.y0 + d.y; })]);
-
-          svg.selectAll(".layer")
-              .data(layers)
-            .enter().append("path")
-              .attr("class", "layer")
-              .attr("d", function(d) { return area(d.values); })
-              .style("fill", colors[catagory]);
-
-          svg.append("g")
-              .attr("class", "x axis")
-              .attr("transform", "translate(0," + height + ")")
-              .call(xAxis);
-
-          svg.append("g")
-              .attr("class", "y axis")
-               .attr("transform", "translate(0,0)")
-              .call(yAxis);
-        });
-    });
 
 
     </script>

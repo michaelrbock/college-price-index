@@ -94,7 +94,7 @@ keywords = {
         "meal",
         "breakfast",
         "dinner",
-        "lunch"
+        "lunch",
         "burger",
         "pizza",
         "bread",
@@ -104,7 +104,6 @@ keywords = {
         "burrito",
         "chipotle",
         "panera",
-        "jimmy johns",
         "subway",
         "starbucks",
         "taco",
@@ -406,7 +405,7 @@ class CategoriesHandler(BaseHandler):
 
         last_item_index = 0
         if category_id == "food":
-            last_item_index = 30
+            last_item_index = 29
         elif category_id == "housing":
             last_item_index = 4
         elif category_id == "transportation":
