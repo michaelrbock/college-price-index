@@ -87,16 +87,16 @@ var n = highcatagories.length, // number of layers
 
     var a = [], i;
     mainDataDict = maingraphdata[catindexmain];
-    // console.log(mainDataDict)
-
-
-
+    console.log("test", mainDataDict)
         // console.log(a,i)
-        for (i = 0; i < n; ++i) a[i] = maingraphdata[catindexmain].history[i].average;
+        for (i = 0; i < n; ++i){
 
 
-
-
+          a[i] = maingraphdata[catindexmain].history[i].average;
+          if (mainDataDict.title == "housing") {
+            a[i] = a[i]/15
+          }
+        }
       // return [{'x':0,'y':.2 },{'x':1,'y':.3},{'x':2,'y':.5},{'x':3,'y':.5}]
     results= a.map(function(d, i) { return {x: i, y: Math.max(0, d),title:maingraphdata[catindexmain].title}; });
     catindexmain += 1;
