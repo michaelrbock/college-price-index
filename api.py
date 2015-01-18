@@ -113,7 +113,7 @@ class ItemsHandler(BaseHandler):
             else:
                 quarter = '10/01/'
 
-            if item.date.year >= 2012:
+            if item.date.year >= 2013:
                 quarter += str(item.date.year)
                 for idx1, obj in enumerate(category_entry.history):
                     if obj['start_date'] == quarter:
@@ -137,62 +137,8 @@ class ItemsHandler(BaseHandler):
         self.write(json.dumps({'data': result_list}))
 
 
-class FakeHandler(BaseHandler):
-    def get(self):
-            CONST = """
-    {
-        "data": {
-            "categories": [
-                {
-                    "title": "food",
-                    "total": 662.90,
-                    "count": 53,
-                    "average": 11.75,
-                    "history": [
-                        {
-                            "title": "Q1 2012",
-                            "average": 1
-                        },
-                        {
-                            "title": "Q2 2012",
-                            "average": 2
-                        },
-                        {
-                            "title": "Q3 2012",
-                            "average": 3
-                        },
-                        {
-                            "title": "Q4 2012",
-                            "average": 4
-                        },
-                        {
-                            "title": "Q1 2013",
-                            "average": 5
-                        }
-                    ]
-                },
-                {
-                    "title": "transportation",
-                    "count": 31,
-                    "average": 34.05903225806451,
-                    "total": 1055.83,
-                    "history": [
-                        {
-                            "title": "lol no more",
-                            "average": 9000
-                        }
-                    ]
-                }
-            ]
-        }
-    }"""
-            self.response.headers['Access-Control-Allow-Origin'] = '*'
-            self.write(CONST)
-
-
 app = webapp2.WSGIApplication([
     ('/api/categories/?', CategoriesHandler),
     ('/api/overall/?', OverallHandler),
-    ('/api/categories/([a-z]+)/items/?', ItemsHandler),
-    ('/api/fake/?', FakeHandler)
+    ('/api/categories/([a-z]+)/items/?', ItemsHandler)
 ], debug=True)
