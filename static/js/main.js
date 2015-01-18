@@ -4,7 +4,7 @@ var colors = {'food':'#c16e33', 'transportation':'#3b489a', 'school':'#5b816c', 
 
 
 var maingraphdata = null;
-d3.json("static/src/data2.json", function(error, json) {
+d3.json("https://collegepriceindex.appspot.com/api/categories", function(error, json) {
 
 
     maingraphdata = json.data
@@ -150,7 +150,7 @@ highcatagories.forEach(function(catagory){
 
 
 
-    d3.json("static/src/data.json", function(error, json) {
+    d3.json("https://collegepriceindex.appspot.com/api/categories/", function(error, json) {
           // if (error) return console.warn(error);
           // console.log(json)
         var catindex = 0
