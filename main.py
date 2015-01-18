@@ -174,6 +174,7 @@ keywords = {
     ],
     "vices" : [
         "beer",
+        "alc",
         "weed",
         "bet",
         "gambl",
@@ -295,50 +296,62 @@ class OAuthSuccessHandler(BaseHandler):
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '04/01/2012',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '07/01/2012',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '10/01/2012',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '01/01/2013',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '04/01/2013',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '07/01/2013',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '10/01/2013',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '01/01/2014',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '04/01/2014',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '07/01/2014',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '10/01/2014',
                         'total': 0,
                         'count': 0
                     },
+                    {
                         'start_date': '01/01/2015',
                         'total': 0,
                         'count': 0
@@ -363,14 +376,16 @@ class OAuthSuccessHandler(BaseHandler):
                 if item['date'].year >= 2012:
                     quarter += str(item['date'].year)
                     # add to history
-                    quarter_num = [x for x in history if x['start_date'] == quarter][0]
+                    for index, obj in enumerate(category_entry.history):
+                        if obj['start_date'] == quarter:
+                            quarter_num = index
                     category_entry.history[quarter_num]['total'] += item['amount']
                     category_entry.history[quarter_num]['count'] += 1
 
 
             category_entry.put()
 
-        self.write('Thanks for adding {0} items in {1} categories the College Price Index! '.format(
+        self.write('Thanks for adding {0} items in {1} categories to the College Price Index! '.format(
             str(len(items)), str(len(categories))))
         self.write('We appreciate your contribution to science! ')
 

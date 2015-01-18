@@ -19,10 +19,11 @@ class BaseHandler(webapp2.RequestHandler):
         self.response.out.write(*a, **kw)
 
 
+CATEGORY_KEYS = ['food', 'transportation', 'housing', 'school', 'recreational', 'vices']
+
+
 class CategoriesHandler(BaseHandler):
     def get(self):
-        CATEGORY_KEYS = ['food', 'transportation', 'housing', 'school', 'recreational', 'vices']
-
         category_objects = []
 
         for key in CATEGORY_KEYS:
@@ -35,10 +36,10 @@ class CategoriesHandler(BaseHandler):
             history = category_entry.history
 
             for quarter in history:
-                if history[quarter]['count'] > 0:
-                    history[quarter]['average'] = history[quarter]['total'] / history[quarter]['count']
+                if quarter['count'] > 0:
+                    quarter['average'] = quarter['total'] / quarter['count']
                 else:
-                    history[quarter]['average'] = 0
+                    quarter['average'] = 0
 
             category_obj = {'title': key, 'total': category_entry.total,
                 'count': category_entry.count, 'average': average, 'history': history
@@ -47,6 +48,42 @@ class CategoriesHandler(BaseHandler):
 
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.write(json.dumps({'data': category_objects}))
+
+
+class OverallHandler(BaseHandler):
+    def get(self):
+        food_entry = ndb.Key(main.Category, 'food').get()
+
+        history_list = []
+        for quarter in food_entry.history:
+            d = {'title': 'food'}
+            d['average'] = (quarter['total']/quarter['count'] if quarter['count']>0 else 0)
+            d.update(quarter.items())
+            del d['start_date']
+            history_list.append({
+                'start_date': quarter['start_date'],
+                'categories': [
+                    d
+                ]
+            })
+
+        for key in CATEGORY_KEYS:
+            if key == 'food':
+                continue
+            category_entry = ndb.Key(main.Category, key).get()
+            if not category_entry:
+                continue
+
+            for index, quarter in enumerate(history_list):
+                d = {'title': category_entry.key.id()}
+                d['average'] = (category_entry.history[index]['total']/category_entry.history[index]['count']
+                    if category_entry.history[index]['count']>0 else 0)
+                d.update(category_entry.history[index].items())
+                del d['start_date']
+                history_list[index]['categories'].append(d)
+
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        self.write(json.dumps({'data': history_list}))
 
 
 class ItemsHandler(BaseHandler):
@@ -109,6 +146,7 @@ class FakeHandler(BaseHandler):
 
 app = webapp2.WSGIApplication([
     ('/api/categories/?', CategoriesHandler),
+    ('/api/overall/?', OverallHandler),
     ('/api/items/?', ItemsHandler),
     ('/api/fake/?', FakeHandler)
 ], debug=True)
