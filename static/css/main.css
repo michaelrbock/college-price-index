@@ -1,8 +1,9 @@
 .chartGrid{
-	padding-bottom: 30px;
+  padding-bottom: 30px;
 }
-
-
+.bottom-buffer {
+  margin-bottom: 20px;
+}
 .chart rect {
   fill: steelblue;
 }
@@ -13,33 +14,43 @@
   text-anchor: end;
 }
 #blackLine{
-	position: absolute;
-	border-bottom: 3px solid black;
-	top: 207px;
-	width: 100%;
+  position: absolute;
+  border-bottom: 3px solid black;
+  top: 207px;
+  width: 100%;
 }
 #logo{
-	margin: 20px 0 30px 0;
-	max-width:400px;
+  margin: 20px 0 30px 0;
+  max-width:400px;
 }
 #customButton{
-   background-image: url('/static/img/participateB.png');
-   margin: 169px 0 30px 0;
-	text-align: right;
-	width: 271px;
-	height: 38px;
+  background-image: url('/static/img/participateB.png');
+  margin: 169px 0 30px 0;
+  text-align: right;
+  width: 271px;
+  height: 38px;
 }
 #customButton:hover {
-   background-image: url('/static/img/participateHoverB.png');
+  background-image: url('/static/img/participateHoverB.png');
+}
+#customButton:hover~#helpText {
+  visibility: visible;
+}
+#helpText{
+  visibility: hidden;
+  margin: 166px 0 30px 0;
 }
 #mainImage {
-	margin: 0px;
-	padding-right: 0px;
+  margin: 0px;
+  padding-right: 0px;
+}
+#legendText{
+  margin-bottom: 65px;
 }
 
 
 body{
-	margin-left: 0px;
+  margin-left: 0px;
 }
 
 .axis path, .axis line {
@@ -51,31 +62,39 @@ body{
 
 @media screen and (max-width:690px) {
 #customButton{
-	margin:-11px auto 25px 50px
+  margin:-11px auto 25px 50px
+}
+@media screen and (max-width:767px) {
+#legendText{
+  margin-bottom: 80px;
 }
 @media screen and (max-width:535px) {
 #blackLine{
-	display:none;
+  display:none;
 }
 @media screen and (max-width:500px) {
 #customButton{
-	margin-left:48px;
+  margin-left:48px;
 }
 @media screen and (max-width:475px) {
 #customButton{
-	margin-left:46px;
+  margin-left:46px;
 }
 @media screen and (max-width:450px) {
 #customButton{
-	margin-left:44px;
+  margin-left:44px;
 }
 @media screen and (max-width:425px) {
 #customButton{
-	margin-left:42px;
+  margin-left:42px;
 }
 @media screen and (max-width:400px) {
 #customButton{
-	margin-left:40px;
+  margin-left:40px;
+}
+@media screen and (max-width: 500px) {
+#helpText{
+  margin: 0px 0 0px 0;
 }
 
 
