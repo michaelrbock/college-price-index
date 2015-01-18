@@ -1,10 +1,10 @@
 html{height:100%;}
-/*body {
+body {
 background:#0D343A;
 background:-webkit-gradient(linear,0% 0%,0% 100%, from(rgba(13,52,58,1) ), to(#000000)  );
 background: -moz-linear-gradient(top, rgba(13,52,58,1) 0%, rgba(0,0,0,1) 100%);
 
-overflow:hidden;}*/
+overflow:hidden;}
 
 .drop {
   background: url(http://i.imgur.com/8vnFqin.png);
@@ -97,13 +97,13 @@ overflow:hidden;}*/
 		transform:translateX(80px)
      rotateZ(270deg)
      rotateX(55deg)
-    rotateY(55deg)
+    rotateY(55deg)    
   }
   75% {
 		transform:translateX(80px)
      rotateZ(135deg)
      rotateX(35deg)
-    rotateY(35deg)
+    rotateY(35deg)    
   }
 	100%{
 		transform:translateX(0px)
@@ -114,26 +114,18 @@ overflow:hidden;}*/
 }
 
 @-webkit-keyframes fall{
+  to {margin-top:2000px;}
   0%{
-    -webkit-transform:translateX(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+		-webkit-transform:translateX(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     transform:translateX(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
 
-  }
-  25% {
-    -webkit-transform:translateX(80px) rotateX(135deg) rotateY(35deg) rotateZ(35deg);
-    transform:translateX(80px) rotateX(135deg) rotateY(35deg) rotateZ(35deg);    
-  }
-  50%{
-    -webkit-transform:translateX(80px) rotateX(270deg) rotateY(55deg) rotateZ(55deg);
-    transform:translateX(80px) rotateX(270deg) rotateY(55deg) rotateZ(55deg);
-  }
-  75% {
-    -webkit-transform:translateX(80px) rotateX(135deg) rotateY(35deg) rotateZ(35deg);
-    transform:translateX(80px) rotateX(135deg) rotateY(35deg) rotateZ(35deg); 
-  }
-  100%{
+	}
+	50%{
+    -webkit-transform:translateX(80px) rotateX(50deg) rotateY(50deg) rotateZ(50deg);
+    transform:translateX(80px) rotateX(50deg) rotateY(50deg) rotateZ(50deg);
+	}
+	100%{
     -webkit-transform:translateX(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
     transform:translateX(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
   }
-  to {margin-top:2000px;}
 }
