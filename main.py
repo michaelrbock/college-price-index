@@ -401,6 +401,11 @@ class OAuthSuccessHandler(BaseHandler):
         self.write('Click <a href="/">here</a> to go check out the data :)')
 
 
+class CategoriesHandler(BaseHandler):
+    def get(self, category_id):
+        self.render('categories.html', category_id)
+
+
 class Item(ndb.Model):
     date = ndb.DateTimeProperty(required=True)
     title = ndb.StringProperty(required=True)
@@ -425,4 +430,5 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/signin/?', OAuthStartHandler),
     ('/success/?', OAuthSuccessHandler),
+    ('/categories/([a-z]+)/?', CategoriesHandler)
 ], debug=True)
