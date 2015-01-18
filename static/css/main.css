@@ -33,13 +33,6 @@
 #customButton:hover {
   background-image: url('/static/img/participateHoverB.png');
 }
-#customButton:hover~#helpText {
-  visibility: visible;
-}
-#helpText{
-  visibility: hidden;
-  margin: 166px 0 30px 0;
-}
 #mainImage {
   margin: 0px;
   padding-right: 0px;
@@ -102,41 +95,44 @@ body{
 }
 
 
-@media screen and (max-width:690px) {
+@media screen and (max-width:640px) {
 #customButton{
   margin:-11px auto 25px 50px
+}
+@media screen and (max-width:620px) {
+#customButton{
+  margin-left:42px;
+}
+#blackLine{
+  display:none;
 }
 @media screen and (max-width:767px) {
 #legendText{
   margin-bottom: 80px;
 }
 @media screen and (max-width:535px) {
-#blackLine{
-  display:none;
+#customButton{
+  margin-left:38px;
 }
 @media screen and (max-width:500px) {
 #customButton{
-  margin-left:48px;
+  margin-left:37px;
 }
 @media screen and (max-width:475px) {
 #customButton{
-  margin-left:46px;
+  margin-left:35px;
 }
 @media screen and (max-width:450px) {
 #customButton{
-  margin-left:44px;
+  margin-left:33px;
 }
 @media screen and (max-width:425px) {
 #customButton{
-  margin-left:42px;
+  margin-left:31px;
 }
 @media screen and (max-width:400px) {
 #customButton{
-  margin-left:40px;
-}
-@media screen and (max-width: 500px) {
-#helpText{
-  margin: 0px 0 0px 0;
+  margin-left:29px;
 }
 
 
