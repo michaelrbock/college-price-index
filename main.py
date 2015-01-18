@@ -107,7 +107,7 @@ keywords = {
         "jimmy johns",
         "subway",
         "starbucks",
-        "taco bell",
+        "taco",
         "noodles",
         "quiznos",
         "juice",
