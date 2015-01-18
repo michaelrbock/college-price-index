@@ -87,8 +87,53 @@ class OverallHandler(BaseHandler):
 
 
 class ItemsHandler(BaseHandler):
-    def get(self):
-        pass
+    def get(self, category_id):
+        if category_id not in CATEGORY_KEYS:
+            self.error(404)
+            self.write('Category not found')
+            return
+
+        category_entry = ndb.Key(main.Category, category_id).get()
+
+        all_items = main.Item.query(main.Item.category == category_id)
+
+        result_list = []
+
+        for entry in category_entry.history:
+            result_list.append({'start_date': entry['start_date'], 'items': []})
+
+        for item in all_items:
+            # calculate quarter
+            if item.date.month < 4:
+                quarter = '01/01/'
+            elif item.date.month < 7:
+                quarter = '04/01/'
+            elif item.date.month < 10:
+                quarter = '07/01/'
+            else:
+                quarter = '10/01/'
+
+            if item.date.year >= 2012:
+                quarter += str(item.date.year)
+                for idx1, obj in enumerate(category_entry.history):
+                    if obj['start_date'] == quarter:
+                        quarter_num = idx1
+                item_index = None
+                for idx2, item2 in enumerate(result_list[quarter_num]['items']):
+                    if item2['title'] == item.title:
+                        item_index = idx2
+                        break
+                if not item_index:
+                    result_list[quarter_num]['items'].append({
+                        'title': item.title, 'average': 0, 'total': 0, 'count': 0
+                    })
+                    item_index = -1
+                result_list[quarter_num]['items'][item_index]['total'] += item.amount
+                result_list[quarter_num]['items'][item_index]['count'] += 1
+                result_list[quarter_num]['items'][item_index]['average'] = (
+                    result_list[quarter_num]['items'][item_index]['total']/result_list[quarter_num]['items'][item_index]['count'])
+
+        self.write(json.dumps({'data': result_list}))
 
 
 class FakeHandler(BaseHandler):
@@ -147,6 +192,6 @@ class FakeHandler(BaseHandler):
 app = webapp2.WSGIApplication([
     ('/api/categories/?', CategoriesHandler),
     ('/api/overall/?', OverallHandler),
-    ('/api/items/?', ItemsHandler),
+    ('/api/categories/([a-z]+)/items/?', ItemsHandler),
     ('/api/fake/?', FakeHandler)
 ], debug=True)

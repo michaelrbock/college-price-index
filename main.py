@@ -139,7 +139,6 @@ keywords = {
     ],
     "housing" : [
         "rent",
-        "gas",
         "utilities",
         "electric",
         "cable",
@@ -149,6 +148,7 @@ keywords = {
     ],
     "transportation" : [
         "airbnb",
+        "gas",
         "hotel",
         "flight",
         "cab",
@@ -159,12 +159,20 @@ keywords = {
 
     ],
     "school" : [
-        "school supplies",
-        "book"
+        "school",
+        "book",
+        "tuition",
+        "backpack",
+        "notebook",
+        "printing",
+        "pencil",
+        "calculator",
+        "dues",
+        "fraternity",
+        "sorority"
     ],
     "recreational" : [
         "movie",
-        "dues",
         "ticket",
         "concert",
         movie    ,
