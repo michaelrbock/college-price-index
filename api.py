@@ -133,6 +133,7 @@ class ItemsHandler(BaseHandler):
                 result_list[quarter_num]['items'][item_index]['average'] = (
                     result_list[quarter_num]['items'][item_index]['total']/result_list[quarter_num]['items'][item_index]['count'])
 
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
         self.write(json.dumps({'data': result_list}))
 
 
