@@ -94,7 +94,7 @@ keywords = {
         "meal",
         "breakfast",
         "dinner",
-        "lunch"
+        "lunch",
         "burger",
         "pizza",
         "bread",
