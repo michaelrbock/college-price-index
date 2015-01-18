@@ -403,7 +403,25 @@ class OAuthSuccessHandler(BaseHandler):
 
 class CategoriesHandler(BaseHandler):
     def get(self, category_id):
+
+        last_item_index = 0
+        if category_id == "food":
+            last_item_index = 30
+        elif category_id == "housing":
+            last_item_index = 4
+        elif category_id == "transportation":
+            last_item_index = items = 7
+        elif category_id == "recreational":
+            last_item_index = 3
+        elif category_id == "vices":
+            last_item_index = 5
+        elif category_id == "school":
+            last_item_index = len(keywords[category_id])
+
+
+
         items = keywords[category_id]
+        items = items[:last_item_index]
         self.render('categories.html', category_id=category_id, title=category_id.title(), items=items)
 
 
