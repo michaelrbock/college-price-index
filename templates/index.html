@@ -7,13 +7,12 @@
 </head>
 <body>
 
+    <div id="blackLine">
+    </div>
     <div class="container">
         <div id="customNavBar" class="row">
-            <div id="logo" class="col-sm-3 col-xs-3">
-                <img src="http://placehold.it/700x700" class="img-responsive">
-            </div>
-            <div id="title" class="col-sm-6 col-xs-6">
-                COLLEGE<br>PRICE<br>INDEX
+            <div id="logo" class="col-sm-9 col-sm-9 col-xs-9">
+                <img src="/static/img/cpi.png" class="img-responsive">
             </div>
             <div id="customButton" class="col-sm-3 col-xs-3">
                 <a href="/signup" class="btn btn-default">Sign Up</a>
@@ -27,40 +26,51 @@
 
             </div>
 
-    </div>
+        </div>
 
-<!--
-var colors = {'food':'#fff', 'transportation':'#fff', 'school':'#fff', 'recreation':'#fff', 'vices':'#fff',
-'housing':'#fff'} -->
+
 
     <div class="container">
         <div class="row">
-            <div class="col-sm-4 col-xs-12 chartGrid">
-                <h4>Sample Data</h4>
-                <div id="maxwidth" >
-                  <svg class="chart" id="chart" >
-                  </svg>
+          <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Food</h4>
+                 <div id="foodChart" >
+
                 </div>
-
-
-                 <div id="text-results"></div>
-    <script type="text/handlebars" id="text-template">
-      <div class="row marketing">
-        <h4>({{'{{area_code}}'}}) {{'{{body}}'}}</h4>
-        <div class="col-md-3">{{'{{city}}'}}, {{'{{state}}'}}</div>
-        <div class="col-md-2">{{'{{zip_code}}'}}</div>
-        <div class="col-md-3">{{'{{time_since}}'}} ago</div>
-      </div>
-      <hr>
-    </script>
             </div>
             <div class="col-sm-4 col-xs-12 chartGrid">
-                <h4>Sample Data</h4>
-                <img src="http://placehold.it/500x500" class="img-responsive">
+                <h4>Housing</h4>
+                 <div id="housingChart" >
+
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Transportation</h4>
+                <div id="transportationChart" >
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Vices</h4>
+                <div id="vicesChart" >
+
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Recreation</h4>
+                <div id="recreationalChart" >
+
+                </div>
             </div>
             <div class="col-sm-4 col-xs-12 chartGrid">
-                <h4>Sample Data</h4>
-                <img src="http://placehold.it/500x500" class="img-responsive">
+                <h4>School</h4>
+                <div id="schoolChart" >
+
+                </div>
             </div>
         </div>
     </div>
