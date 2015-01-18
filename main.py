@@ -403,7 +403,8 @@ class OAuthSuccessHandler(BaseHandler):
 
 class CategoriesHandler(BaseHandler):
     def get(self, category_id):
-        self.render('categories.html', category_id)
+        items = keywords[category_id]
+        self.render('categories.html', category_id=category_id, title=category_id.title(), items=items)
 
 
 class Item(ndb.Model):
