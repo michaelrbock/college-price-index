@@ -269,6 +269,11 @@ class OAuthSuccessHandler(BaseHandler):
     def get(self):
         """Get access_token and then get payments and add to db all in one!"""
 
+        error = self.request.get('error')
+        if error:
+            self.redirect('/')
+            return
+
         access_token = self.request.get('access_token')
 
         # make payments API call with access_token
