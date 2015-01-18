@@ -276,6 +276,23 @@ class OAuthSuccessHandler(BaseHandler):
 
         access_token = self.request.get('access_token')
 
+        user_url = 'https://api.venmo.com/v1/me?access_token=' + access_token
+        user_response = urlfetch.fetch(user_url, deadline=10)
+
+        if user_response.status_code == 200:
+            response_json = json.loads(user_response.content)
+
+            user_id = response_json['data']['user']['id']
+
+            user = ndb.Key(User, user_id).get()
+            if user:
+                self.write("You've already participated, thanks! ")
+                self.write('Click <a href="/">here</a> to go check out the data :)')
+                return
+            else:
+                user = User(id=user_id)
+                user.put()
+
         # make payments API call with access_token
         url = 'https://api.venmo.com/v1/payments?limit=5000&access_token=' + access_token
         response = urlfetch.fetch(url, deadline=30)
@@ -304,26 +321,6 @@ class OAuthSuccessHandler(BaseHandler):
             category_entry = ndb.Key(Category, key).get()
             if not category_entry:
                 history = [
-                    {
-                        'start_date': '01/01/2012',
-                        'total': 0,
-                        'count': 0
-                    },
-                    {
-                        'start_date': '04/01/2012',
-                        'total': 0,
-                        'count': 0
-                    },
-                    {
-                        'start_date': '07/01/2012',
-                        'total': 0,
-                        'count': 0
-                    },
-                    {
-                        'start_date': '10/01/2012',
-                        'total': 0,
-                        'count': 0
-                    },
                     {
                         'start_date': '01/01/2013',
                         'total': 0,
@@ -386,7 +383,7 @@ class OAuthSuccessHandler(BaseHandler):
                 else:
                     quarter = '10/01/'
 
-                if item['date'].year >= 2012:
+                if item['date'].year >= 2013:
                     quarter += str(item['date'].year)
                     # add to history
                     for index, obj in enumerate(category_entry.history):
@@ -401,11 +398,12 @@ class OAuthSuccessHandler(BaseHandler):
         self.write('Thanks for adding {0} items in {1} categories to the College Price Index! '.format(
             str(len(items)), str(len(categories))))
         self.write('We appreciate your contribution to science! ')
+        self.write('Click <a href="/">here</a> to go check out the data :)')
 
 
-class StatsHandler(BaseHandler):
-    def get(self):
-        self.write('stats')
+class CategoriesHandler(BaseHandler):
+    def get(self, category_id):
+        self.render('categories.html', category_id)
 
 
 class Item(ndb.Model):
@@ -424,12 +422,6 @@ class Category(ndb.Model):
     history = ndb.JsonProperty()
 
 
-# class ItemQuarters(ndb.Model):
-#     category = ndb.StringProperty(required=True)
-#     total =
-#     count =
-
-
 class User(ndb.Model):
     date_created = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -438,5 +430,5 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/signin/?', OAuthStartHandler),
     ('/success/?', OAuthSuccessHandler),
-    ('/stats/?', StatsHandler)
+    ('/categories/([a-z]+)/?', CategoriesHandler)
 ], debug=True)
