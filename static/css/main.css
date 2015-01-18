@@ -48,11 +48,46 @@
   margin-bottom: 65px;
 }
 
+#foodTitle {
+  color:#c16e33;
+  font-size:18px;
+  font-weight:bold
+}
+#transportationTitle {
+  color:#3b489a;
+  font-size:18px;
+  font-weight:bold
+}
+#schoolTitle {
+  color:#5b816c;
+  font-size:18px;
+  font-weight:bold
+}
+#recreationalTitle {
+  color:#694b81;
+  font-size:18px;
+  font-weight:bold
+}
+#vicesTitle {
+  color:#86963b;
+  font-size:18px;
+  font-weight:bold
+}
+#housingTitle {
+  color:#55302c;
+  font-size:18px;
+  font-weight:bold
+}
+
+
+
 .explain{
   font-size: 15px;
   color: rgb(58, 59, 63);
   padding-right: 7.5%;
   padding-left: 7.5%;
+  padding-top: 20%;
+  padding-bottom: 5%;
 
 }
 

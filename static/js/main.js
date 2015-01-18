@@ -116,7 +116,7 @@ var smallChartsRender = function(catagory){
 
     var format = d3.time.format("%m/%d/%Y");
 
-    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+    var margin = {top: 20, right: 30, bottom: 30, left: 60},
     width = $(catagoryid).width() - margin.left - margin.right,
     height = $(catagoryid).width() - margin.top - margin.bottom;
         // height = height /2;
@@ -132,11 +132,12 @@ var smallChartsRender = function(catagory){
         var xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .ticks(d3.time.months, 6);
+        .ticks(d3.time.months, 12);
 
         var yAxis = d3.svg.axis()
         .scale(y)
         .tickFormat(d3.format("$s"))
+        .ticks(2)
         .orient("left");
 
         var stack = d3.layout.stack()
