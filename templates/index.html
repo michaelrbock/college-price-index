@@ -1,1 +1,84 @@
-This is not really <b>html</b> <i>lol</i>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>College Price Index</title>
+    {% include 'header.html' %}
+</head>
+<body>
+
+    <div id="blackLine">
+    </div>
+    <div class="container">
+        <div id="customNavBar" class="row">
+            <div id="logo" class="col-sm-9 col-sm-9 col-xs-9">
+                <img src="/static/img/cpi.png" class="img-responsive">
+            </div>
+            <div id="customButton" class="col-sm-3 col-xs-3">
+                <a href="/signup" class="btn btn-default">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+        <div class="row">
+            <div id="mainImage" class="col-sm-12 col-xs-12 chartGrid">
+
+
+            </div>
+
+        </div>
+
+
+
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Food</h4>
+                 <div id="foodChart" >
+
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Housing</h4>
+                 <div id="housingChart" >
+
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Transportation</h4>
+                <div id="transportationChart" >
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Vices</h4>
+                <div id="vicesChart" >
+
+                </div>
+            </div>
+
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>Recreation</h4>
+                <div id="recreationalChart" >
+
+                </div>
+            </div>
+            <div class="col-sm-4 col-xs-12 chartGrid">
+                <h4>School</h4>
+                <div id="schoolChart" >
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/static/js/main.js">
+    </script>
+
+</body>
+
+</html>
