@@ -71,7 +71,7 @@ function bumpLayer(n) {
 
       var a = [], i;
       mainDataDict = maingraphdata[catindexmain];
-      console.log(mainDataDict)
+      // console.log(mainDataDict)
 
 
       // console.log(a,i)
@@ -193,7 +193,7 @@ highcatagories.forEach(function(catagory){
         .enter().append("path")
           .attr("class", "layer")
           .attr("d", function(d) { return area(d.values); })
-          .style("fill", colors[catagory]);
+          .style("fill", colors[fai]);
 
       svg.append("g")
           .attr("class", "x axis")
@@ -202,7 +202,7 @@ highcatagories.forEach(function(catagory){
 
       svg.append("g")
           .attr("class", "y axis")
-           .attr("transform", "translate(5,0)")
+           .attr("transform", "translate(0,0)")
           .call(yAxis);
     });
 });
