@@ -48,7 +48,35 @@ body{
   shape-rendering: crispEdges;
 }
 
+
 @media screen and (max-width:690px) {
 #customButton{
-	margin:auto;
+	margin:-11px auto 25px 50px
 }
+@media screen and (max-width:535px) {
+#blackLine{
+	display:none;
+}
+@media screen and (max-width:500px) {
+#customButton{
+	margin-left:48px;
+}
+@media screen and (max-width:475px) {
+#customButton{
+	margin-left:46px;
+}
+@media screen and (max-width:450px) {
+#customButton{
+	margin-left:44px;
+}
+@media screen and (max-width:425px) {
+#customButton{
+	margin-left:42px;
+}
+@media screen and (max-width:400px) {
+#customButton{
+	margin-left:40px;
+}
+
+
+
