@@ -107,6 +107,7 @@ keywords = {
         "jimmy johns",
         "subway",
         "starbucks",
+        "taco bell",
         "noodles",
         "quiznos",
         "juice",
@@ -118,6 +119,9 @@ keywords = {
         "milk",
         "eggs",
         "bacon",
+        "coffee",
+        "tea",
+        "vending",
         hamburger,
         pizza    ,
         chicken  ,
@@ -135,7 +139,6 @@ keywords = {
     ],
     "housing" : [
         "rent",
-        "gas",
         "utilities",
         "electric",
         "cable",
@@ -145,6 +148,7 @@ keywords = {
     ],
     "transportation" : [
         "airbnb",
+        "gas",
         "hotel",
         "flight",
         "cab",
@@ -155,12 +159,20 @@ keywords = {
 
     ],
     "school" : [
-        "school supplies",
-        "book"
+        "school",
+        "book",
+        "tuition",
+        "backpack",
+        "notebook",
+        "printing",
+        "pencil",
+        "calculator",
+        "dues",
+        "fraternity",
+        "sorority"
     ],
     "recreational" : [
         "movie",
-        "dues",
         "ticket",
         "concert",
         movie    ,
@@ -170,7 +182,10 @@ keywords = {
     ],
     "vices" : [
         "beer",
+        "alc",
         "weed",
+        "bet",
+        "gambl",
         cig   ,
         drugs ,
         drink ,
@@ -254,7 +269,29 @@ class OAuthSuccessHandler(BaseHandler):
     def get(self):
         """Get access_token and then get payments and add to db all in one!"""
 
+        error = self.request.get('error')
+        if error:
+            self.redirect('/')
+            return
+
         access_token = self.request.get('access_token')
+
+        user_url = 'https://api.venmo.com/v1/me?access_token=' + access_token
+        user_response = urlfetch.fetch(user_url, deadline=10)
+
+        if user_response.status_code == 200:
+            response_json = json.loads(user_response.content)
+
+            user_id = response_json['data']['user']['id']
+
+            user = ndb.Key(User, user_id).get()
+            if user:
+                self.write("You've already participated, thanks! ")
+                self.write('Click <a href="/">here</a> to go check out the data :)')
+                return
+            else:
+                user = User(id=user_id)
+                user.put()
 
         # make payments API call with access_token
         url = 'https://api.venmo.com/v1/payments?limit=5000&access_token=' + access_token
@@ -273,8 +310,9 @@ class OAuthSuccessHandler(BaseHandler):
         categories = defaultdict(list)
 
         for item in items:
-            categories[item['category']].append(item['amount'])
-            item_entry = Item(date=dateutil.parser.parse(item['date']), title=item['title'],
+            parsed_date = dateutil.parser.parse(item['date'])
+            categories[item['category']].append({'amount': item['amount'], 'date': parsed_date})
+            item_entry = Item(date=parsed_date, title=item['title'],
                 amount=item['amount'], note=item['note'], category=item['category'], id=item['id'])
             item_entry.put()
 
@@ -282,21 +320,90 @@ class OAuthSuccessHandler(BaseHandler):
             # query db to get the category, update info
             category_entry = ndb.Key(Category, key).get()
             if not category_entry:
-                category_entry = Category(id=key, total=sum(categories[key]),
-                    count=len(categories[key]))
-            else:
-                category_entry.total += sum(categories[key])
-                category_entry.count += len(categories[key])
+                history = [
+                    {
+                        'start_date': '01/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '04/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '07/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '10/01/2013',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '01/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '04/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '07/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '10/01/2014',
+                        'total': 0,
+                        'count': 0
+                    },
+                    {
+                        'start_date': '01/01/2015',
+                        'total': 0,
+                        'count': 0
+                    }
+                ]
+                category_entry = Category(id=key, total=0, count=0, history=history)
+
+            category_entry.total += sum(item['amount'] for item in categories[key])
+            category_entry.count += len(categories[key])
+
+            for item in categories[key]:
+                # calculate quarter
+                if item['date'].month < 4:
+                    quarter = '01/01/'
+                elif item['date'].month < 7:
+                    quarter = '04/01/'
+                elif item['date'].month < 10:
+                    quarter = '07/01/'
+                else:
+                    quarter = '10/01/'
+
+                if item['date'].year >= 2013:
+                    quarter += str(item['date'].year)
+                    # add to history
+                    for index, obj in enumerate(category_entry.history):
+                        if obj['start_date'] == quarter:
+                            quarter_num = index
+                    category_entry.history[quarter_num]['total'] += item['amount']
+                    category_entry.history[quarter_num]['count'] += 1
+
+
             category_entry.put()
 
-        self.write('Thanks for adding {0} items in {1} categories the College Price Index! '.format(
+        self.write('Thanks for adding {0} items in {1} categories to the College Price Index! '.format(
             str(len(items)), str(len(categories))))
         self.write('We appreciate your contribution to science! ')
+        self.write('Click <a href="/">here</a> to go check out the data :)')
 
 
-class StatsHandler(BaseHandler):
-    def get(self):
-        self.write('stats')
+class CategoriesHandler(BaseHandler):
+    def get(self, category_id):
+        self.render('categories.html', category_id)
 
 
 class Item(ndb.Model):
@@ -312,6 +419,7 @@ class Category(ndb.Model):
     date_created = ndb.DateTimeProperty(auto_now_add=True)
     total = ndb.FloatProperty()
     count = ndb.IntegerProperty()
+    history = ndb.JsonProperty()
 
 
 class User(ndb.Model):
@@ -322,5 +430,5 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/signin/?', OAuthStartHandler),
     ('/success/?', OAuthSuccessHandler),
-    ('/stats/?', StatsHandler)
+    ('/categories/([a-z]+)/?', CategoriesHandler)
 ], debug=True)
