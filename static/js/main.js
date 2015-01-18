@@ -17,7 +17,7 @@ d3.json("https://collegepriceindex.appspot.com/api/categories", function(error, 
 
 var n = highcatagories.length, // number of layers
     m = maingraphdata[0].history.length, // number of samples per layer
-    stack = d3.layout.stack().offset("wiggle"),
+    stack = d3.layout.stack().offset("wiggle")
     // stack = d3.layout.stack().offset("expand"),
 
     layers0 = stack(d3.range(n).map(function() { return bumpLayer(m); }));
@@ -56,6 +56,7 @@ var n = highcatagories.length, // number of layers
     .data(layers0)
     .enter().append("path")
     .attr("d", area)
+    // .interpolate("basis")
     .style("fill", function(d){
 
 

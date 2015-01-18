@@ -13,7 +13,7 @@
     <div class="container">
         <div id="customNavBar" class="row">
             <div id="logo" class="col-sm-9 col-sm-9 col-xs-9">
-                <img src="/static/img/cpi.png" class="img-responsive">
+                <a href="/"><img src="/static/img/cpi.png" class="img-responsive"></a>
             </div>
           <div id="customButton" class="col-sm-3 col-xs-3">
                 <a href="/signin"> <input type="image" src="/static/img/participate.png" alt="participate" class="img-responsive"/></a>
@@ -93,17 +93,25 @@ var itemChartsRender = function(catagory, data){
 
 
   var catagoryid = "#" + catagory + "Chart";
-   var format = d3.time.format("%m/%d/%Y");
-
+  var format = d3.time.format("%m/%d/%Y");
 
 
     data.forEach(function(d){
+      console.log(d.items, catagory)
 
-          d.date = format.parse(d.start_date);
-          d.value = +d.average;
+      d.date = format.parse(d.start_date);
+      d.value = 0;
+      d.items.forEach(function(purchase){
+        if (purchase.title == catagory){
+          d.value += purchase.average
+        }
 
 
-      })
+      });
+
+
+
+      });
 
 
 
@@ -165,7 +173,7 @@ var itemChartsRender = function(catagory, data){
       .enter().append("path")
         .attr("class", "layer")
         .attr("d", function(d) { return area(d.values); })
-        .style("fill", colors[catagory]);
+        .style("fill", colors["{{category_id}}"]);
 
     svg.append("g")
         .attr("class", "x axis")
