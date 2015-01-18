@@ -94,7 +94,7 @@ keywords = {
         "meal",
         "breakfast",
         "dinner",
-        "lunch"
+        "lunch",
         "burger",
         "pizza",
         "bread",
@@ -104,10 +104,9 @@ keywords = {
         "burrito",
         "chipotle",
         "panera",
-        "jimmy johns",
         "subway",
         "starbucks",
-        "taco bell",
+        "taco",
         "noodles",
         "quiznos",
         "juice",
@@ -403,7 +402,26 @@ class OAuthSuccessHandler(BaseHandler):
 
 class CategoriesHandler(BaseHandler):
     def get(self, category_id):
-        self.render('categories.html', category_id)
+
+        last_item_index = 0
+        if category_id == "food":
+            last_item_index = 29
+        elif category_id == "housing":
+            last_item_index = 4
+        elif category_id == "transportation":
+            last_item_index = items = 7
+        elif category_id == "recreational":
+            last_item_index = 3
+        elif category_id == "vices":
+            last_item_index = 5
+        elif category_id == "school":
+            last_item_index = len(keywords[category_id])
+
+
+
+        items = keywords[category_id]
+        items = items[:last_item_index]
+        self.render('categories.html', category_id=category_id, title=category_id.title(), items=items)
 
 
 class Item(ndb.Model):

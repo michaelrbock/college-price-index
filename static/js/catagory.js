@@ -3,9 +3,13 @@ var colors = {'food':'#c16e33', 'transportation':'#3b489a', 'school':'#5b816c', 
 'housing':'#55302c'}
 
 
+var maingraphdata = null;
+d3.json("/static/src/data2.json", function(error, json) {
 
 
+  maingraphdata = json.data
 
+});
 
 highcatagories.forEach(function(catagory){
 
