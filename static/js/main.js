@@ -193,7 +193,7 @@ highcatagories.forEach(function(catagory){
         .enter().append("path")
           .attr("class", "layer")
           .attr("d", function(d) { return area(d.values); })
-          .style("fill", colors[fai]);
+          .style("fill", colors[catagory]);
 
       svg.append("g")
           .attr("class", "x axis")
