@@ -48,6 +48,13 @@
   margin-bottom: 65px;
 }
 
+.explain{
+  font-size: 15px;
+  color: rgb(58, 59, 63);
+  padding-right: 7.5%;
+  padding-left: 7.5%;
+
+}
 
 body{
   margin-left: 0px;

@@ -9,23 +9,29 @@
 
 </head>
 <body>
-
+    {% include 'rainSection.html' %}
     <div id="blackLine">
     </div>
     <div class="container">
         <div id="customNavBar" class="row">
             <div id="logo" class="col-sm-6 col-xs-6">
-                <img src="/static/img/cpi.png" class="img-responsive">
+                <img id="logoImage"src="/static/img/cpi.png" class="img-responsive">
             </div>
             <div id="customButton" class="col-sm-3 col-xs-3">
                 <a href="/signin"> <input type="image" src="/static/img/participate.png" alt="participate" class="img-responsive"/></a>
             </div>
-            <div id="helpText" class="col-sm-3 col-xs-12">
+    <!--         <div id="helpText" class="col-sm-3 col-xs-12">
                 Please add your data (completely anonymously) to our growing dataset
-            </div>
+            </div> -->
         </div>
     </div>
-
+    <div class="row bottom-buffer">
+        <div class="col-sm-offset-1 col-sm-10 col-xs-12">
+            <p class="explain">
+                The chart below represents the percent of total spending college students spend on items in each of the six categories over time.
+            </p>
+        </div>
+    </div>
     <div class="row">
         <div id="mainImage" class="col-sm-12 col-xs-12 chartGrid">
 
@@ -33,6 +39,7 @@
         </div>
 
     </div>
+
 
     <div class="container">
         <div class="row">
@@ -63,12 +70,13 @@
                 </div>
             </div>
         </div>
-        <div class="row bottom-buffer">
-            <div class="col-sm-offset-3 col-sm-6 col-xs-12">
-                <h4>
-                    The chart above represents the percent of total spending college students spend on items in each of the six categories over time.
-                </h4>
-            </div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-xs-12">
+            <p class="explain">
+                These charts represent the average amount of money spent on items in the categories shown over time. Click on a chart's title to see detailed information about the items that make up that category.
+            </p>
         </div>
     </div>
 
@@ -95,13 +103,6 @@
                 </div>
             </div>
         </div>
-        <div class="row bottom-buffer">
-            <div class="col-sm-offset-3 col-sm-6 col-xs-12">
-                <h4>
-                    These charts represent the average amount of money spent on items in the categories shown over time. Click on a chart's title to see detailed information about the items that make up that category.
-                </h4>
-            </div>
-        </div>
         <div class="row">
             <div class="col-sm-4 col-xs-12 chartGrid">
                 <a href="categories/vices/"><h4>Vices</h4></a>
@@ -124,10 +125,20 @@
             </div>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-sm-offset-1 col-sm-10 col-xs-12">
+            <p class="explain">
+                Created by <a href="http://tarabeiser.com"> Tara Beiser</a>, <a href="http://michaelrbock.com">Michael Bock</a>, Ze'ev Lailari and <a href="http://julianozen.com">Julian Ozen</a>
+            </p>
+        </div>
+    </div>
 
     <script src="/static/js/main.js">
     </script>
+    <script src="/static/js/rainBills.js">
+    </script>
+
+
 
 
 </body>

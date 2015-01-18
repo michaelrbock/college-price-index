@@ -6,7 +6,7 @@ var colors = {'food':'#c16e33', 'transportation':'#3b489a', 'school':'#5b816c', 
 var colorsMain = ['#c16e33','#86963b', '#55302c', '#5b816c', '#694b81','#3b489a']
 
 var maingraphdata = null;
-d3.json("/static/src/data2.json", function(error, json) {
+d3.json("https://collegepriceindex.appspot.com/api/categories", function(error, json) {
 
 
   maingraphdata = json.data
@@ -51,17 +51,17 @@ var n = highcatagories.length, // number of layers
     .attr("width", width)
     .attr("height", height);
 
-    var stupidcounter = 0;
+
     svg.selectAll("path")
     .data(layers0)
     .enter().append("path")
     .attr("d", area)
     .style("fill", function(d){
-      console.log("d" ,d);
 
 
-      result = colorsMain[stupidcounter];
-      stupidcounter += 1;
+
+      result = colors[d[0].title];
+
       return result
     });
     //.style("fill", function() { return color(Math.random()); });
@@ -87,7 +87,8 @@ var n = highcatagories.length, // number of layers
 
     var a = [], i;
     mainDataDict = maingraphdata[catindexmain];
-        // console.log(mainDataDict)
+    // console.log(mainDataDict)
+
 
 
         // console.log(a,i)
@@ -97,8 +98,9 @@ var n = highcatagories.length, // number of layers
 
 
       // return [{'x':0,'y':.2 },{'x':1,'y':.3},{'x':2,'y':.5},{'x':3,'y':.5}]
-    results= a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
+    results= a.map(function(d, i) { return {x: i, y: Math.max(0, d),title:maingraphdata[catindexmain].title}; });
     catindexmain += 1;
+  // console.log(results)
     return results
   }
 
@@ -108,7 +110,7 @@ var n = highcatagories.length, // number of layers
 var smallChartsRender = function(catagory){
 
   var catagoryid = "#" + catagory + "Chart";
-    // console.log(catagoryid)
+
 
 
 
@@ -162,8 +164,6 @@ var smallChartsRender = function(catagory){
 
 
 
-          // if (error) return console.warn(error);
-          // console.log(json)
           var catindex = 0
           var index = 0;
           maingraphdata.forEach(function(d){
