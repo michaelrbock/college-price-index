@@ -36,7 +36,8 @@ var y = d3.scale.linear()
     .range([height, 0]);
 
 var color = d3.scale.linear()
-    .range(["#b6aab4", "#556"]);
+    .range(['#c16e33', '#3b489a', '#5b816c', '#694b81', '#86963b',
+'#55302c']);
 
 var area = d3.svg.area()
     .x(function(d) { return x(d.x); })
@@ -51,7 +52,7 @@ svg.selectAll("path")
     .data(layers0)
   .enter().append("path")
     .attr("d", area)
-    .style("fill", function() { return color(Math.random()); });
+    .style("fill", );
 
 
 // Inspired by Lee Byron's test data generator.
